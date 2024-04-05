@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const Payments: FC = () => {
+const SampleTable: FC = () => {
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -45,4 +45,4 @@ const Payments: FC = () => {
   );
 };
 
-export default Payments;
+export default SampleTable;
