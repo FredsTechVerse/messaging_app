@@ -4,73 +4,102 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --primary: 222.2 47.4% 11.2%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
   }
 }
 
-@layer base {
+@layer components {
   * {
-    @apply border-border;
+    @apply m-0 p-0 box-border;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--primary);
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-tertiary border-none bg-opacity-80 rounded-lg;
+  }
+
+  .debug {
+    @apply border-2 border-red-600;
+  }
+
+  /* FLEX BOX STYLING */
+
+  .flex-row-centered {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-col-centered {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  /* GRID STYLING */
+
+  .grid-lg {
+    @apply grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-4 2xl:grid-cols-5 gap-3 py-3 place-items-center;
+  }
+
+  .grid-md {
+    @apply grid phone:grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 2xl:grid-cols-4 gap-3 py-3 place-items-center;
+  }
+
+  .icon-styling {
+    @apply text-slate-700 m-0.5 cursor-pointer w-6 h-6;
+  }
+
+  .button {
+    @apply bg-primary/90 backdrop-blur-lg uppercase outline-none text-white font-bold text-center flex justify-center w-48 items-center py-3 px-4 mb-4 cursor-pointer rounded-full;
+  }
+
+  /* MODAL STYLING */
+  .modal-overlay {
+    @apply fixed inset-0 bg-slate-400/30 backdrop-blur-lg flex flex-col z-30 overflow-auto overflow-x-hidden py-5 justify-center;
+  }
+
+  /* FORM STYLING */
+  .form-wrap {
+    @apply w-[85vw] tablet:w-[60vw] laptop:w-[40vw]  mx-auto bg-white flex flex-col justify-start items-center h-auto  overflow-auto overflow-x-hidden rounded-lg;
+  }
+
+  .form-styling {
+    @apply w-full px-5 flex flex-col justify-start items-center;
+  }
+  .input-wrap {
+    @apply flex flex-col justify-center items-start  gap-2 my-0.5 w-full;
+  }
+
+  .input-styling {
+    @apply w-full px-2 bg-slate-200 appearance-none h-10 border-2 text-gray-700 leading-tight focus:border-tertiary placeholder:text-sm rounded-md;
+  }
+
+  textarea {
+    @apply input-styling py-2 min-h-24;
+  }
+
+  label {
+    @apply capitalize;
+  }
+
+  input::placeholder {
+    @apply capitalize;
   }
 }
