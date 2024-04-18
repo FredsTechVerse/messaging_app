@@ -2,6 +2,7 @@
 import React from "react";
 import { FormNavigation, ErrorMessage, Modal } from "..";
 import messageFormState from "@/app/context/MessageFormState";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MessageFormProps {
   handleSubmit: any;
@@ -18,7 +19,6 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
   saveMessage,
   isEditEnabled,
   register,
-  watch,
   errors,
 }) => {
   const toggleMessageForm = messageFormState(
@@ -34,32 +34,8 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
           onSubmit={handleSubmit(saveMessage)}
         >
           <div className="input-wrap">
-            <label htmlFor="contact">Sender</label>
-            <input
-              readOnly={!isEditEnabled}
-              className="input-styling"
-              placeholder="Enter your name"
-              {...register("names", {
-                required: "Atleast one name is required ",
-              })}
-            />
-
-            {names && <ErrorMessage message={names.message} />}
-          </div>
-          <div className="input-wrap">
-            <label htmlFor="contact">Drop your email address</label>
-            <input
-              readOnly={!isEditEnabled}
-              className="input-styling"
-              placeholder="Enter Message"
-              {...register("email")}
-            />
-            {email && <ErrorMessage message={email.message} />}
-          </div>
-
-          <div className="input-wrap">
-            <label htmlFor="contact">Enter Message</label>
-            <input
+            <label htmlFor="message">Message</label>
+            <Textarea
               readOnly={!isEditEnabled}
               className="input-styling"
               placeholder="Enter Message"
@@ -68,7 +44,10 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
             {message && <ErrorMessage message={message.message} />}
           </div>
 
-          <button type="submit" className="button">
+          <button
+            type="submit"
+            className="bg-primary hover:bg-primary/80 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm my-2 "
+          >
             Submit
           </button>
         </form>

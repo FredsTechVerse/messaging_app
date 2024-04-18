@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-type UserFormState = {
+type UserFormStateProps = {
     isUserFormOpen: boolean;
     toggleUserForm: () => void;
     isUserFormSubmitted: boolean;
@@ -11,7 +11,7 @@ type UserFormState = {
 
 };
 
-const UserFormState = create<UserFormState>((set) => ({
+const UserFormState = create<UserFormStateProps>((set) => ({
     isUserFormOpen: false,
     toggleUserForm: () =>
         set((state) => ({ isUserFormOpen: !state.isUserFormOpen })),

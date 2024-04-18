@@ -4,9 +4,8 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MessageSchema } from "@/app/zod_schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { sendMessage, findMessage } from "@/lib/messageActions";
+import { findMessage, sendMessage } from "@/lib/messageActions";
 interface MessageForm {
-  name: string;
   message: string;
 }
 
@@ -32,12 +31,19 @@ const MessageForm: FC = (props) => {
     setIsEditEnabled(true);
   }, []);
 
+  const submitMessage = async (data: any) => {
+    const { message } = data;
+    await sendMessage({ message });
+    console.log({ message });
+    console.log(data);
+  };
+
   return (
     <MessageFormSyntax
       handleSubmit={handleSubmit}
       enableEdit={enableEdit}
       disableEdit={disableEdit}
-      saveMessage={sendMessage}
+      saveMessage={submitMessage}
       isEditEnabled={isEditEnabled}
       register={register}
       watch={watch}

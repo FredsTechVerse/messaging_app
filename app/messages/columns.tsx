@@ -4,50 +4,31 @@ import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { ActionMenu } from "@/app/components/custom";
 
-export type User = {
+export type Message = {
   _id: string;
-  firstName: string;
-  surname: string;
-  contact: string;
-  amount: string;
+  message: string;
+  totalCount: string;
+  successful: string;
+  unsuccessful: string;
+  unsuccessfulRecipients: string;
 };
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Message>[] = [
   {
-    accessorKey: "firstName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          First Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "totalCount",
+    header: "Recipients",
   },
   {
-    accessorKey: "surname",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Last Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "message",
+    header: "Message",
   },
   {
-    accessorKey: "contact",
-    header: "Contact",
+    accessorKey: "successful",
+    header: "Successful",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "unsuccessful",
+    header: "Unsucessful",
   },
   {
     id: "actions",

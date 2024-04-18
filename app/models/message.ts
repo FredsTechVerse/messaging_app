@@ -6,7 +6,7 @@ const MessageSchema = new Schema(
         totalCount: { type: Number, required: true },
         successful: { type: Number, required: true },
         unsuccessful: { type: Number, required: true },
-        unsuccessfulRecipients: [{ type: String, required: true }],
+        unsuccessfulRecipients: [{ type: String }],
     },
     {
         timestamps: true,

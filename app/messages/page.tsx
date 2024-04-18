@@ -1,11 +1,11 @@
-import { User, columns } from "./columns";
-import { DataTable } from "@/app/components/custom";
+import { columns } from "./columns";
+import { MessageTable } from "@/app/components/custom";
 import ActionBtns from "./ActionBtns";
-import { findAllUsers } from "@/lib/userActions";
+import { findAllMessages } from "@/lib/messageActions";
 
 export default async function Page() {
-  const data: any = await findAllUsers();
-  const userData = await JSON.parse(data);
+  const data: any = await findAllMessages();
+  const messageData = await JSON.parse(data);
   return (
     <section className="py-12">
       <div className="w-full">
@@ -14,7 +14,7 @@ export default async function Page() {
           <ActionBtns />
         </div>
 
-        <DataTable columns={columns} data={userData.payload} />
+        <MessageTable columns={columns} data={messageData.payload} />
       </div>
     </section>
   );

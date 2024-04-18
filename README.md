@@ -1,11 +1,11 @@
-# BUILD
+# MESSAGING APPLICATION
 
-- Form toggle
-- Data update 
-- Save to MongoDB.
+## BUILD
 
+- Add character count.
+- Add bulk message confirmation box.
 
-# ERRORS
+## ERRORS
 
 - Correct form btn logic.
 - Know why pnpm ain't loading next js enviroment variables.
@@ -15,6 +15,10 @@
 - One message equivalent to 160 characters
 - Sending messages to other lines costs double and doesn't use your senderID , uses africas talking default sender ID
 - Individualized & uniform responses for each message sent.
+
+### SHADCDN/UI
+
+- Wonderful realization using its components as normal html components
 
 ### INSUFFICIENT BALANCE / ERROR MESSAGE
 

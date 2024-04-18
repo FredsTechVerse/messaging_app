@@ -4,7 +4,7 @@ const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
 import { sendEmail } from "./emailActions";
 import { revalidateTag } from "next/cache";
-
+import connectMongoDB from "./mongodb";
 const africastalking = AfricasTalking({
     apiKey: 'e30f2d6a7b7eba5e9962c36113e09252e5bf8c32d946b6fcd3f124b50b25cd74',
     username: 'fredstechverse'
@@ -18,9 +18,11 @@ interface Recipient {
     status: string,
     statusCode: string
 }
-export const sendMessage = async () => {
+export const sendMessage = async ({ message }: { message: string }) => {
+    console.log("Message being sent");
+    console.log(message);
     try {
-        const message = "Lorem ipsum , Africa's Talking SMS test"
+        // const message = "Lorem ipsum , Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
             to: "+254112615416",
@@ -30,20 +32,20 @@ export const sendMessage = async () => {
         const recipients: Recipient[] = result.SMSMessageData.Recipients;
         const successful = recipients.filter(recipient => recipient.status === "Success").length;
         const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
-        const unsucessful = unsuccessfulRecipients.length;
+        const unsuccessful = unsuccessfulRecipients.length;
         const totalCount = recipients.length;
         const summary = {
             message,
             totalCount,
             successful,
-            unsucessful,
+            unsuccessful,
             unsuccessfulRecipients
         };
         console.log({
             message,
             totalCount,
             successful,
-            unsucessful,
+            unsucessful: unsuccessful,
             unsuccessfulRecipients
         })
         const newMessage = await Message.create(summary)
@@ -55,6 +57,7 @@ export const sendMessage = async () => {
         };
         return JSON.stringify(response);
     } catch (err) {
+        console.log(err);
         return handleError(err)
     }
 
@@ -62,7 +65,7 @@ export const sendMessage = async () => {
 
 export const sendReminder = async () => {
     try {
-        const message = "Lorem ipsum , Africa's Talking SMS test"
+        const message = "Good Reminder, Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
             to: "+254112615416",
@@ -72,22 +75,16 @@ export const sendReminder = async () => {
         const recipients: Recipient[] = result.SMSMessageData.Recipients;
         const successful = recipients.filter(recipient => recipient.status === "Success").length;
         const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
-        const unsucessful = unsuccessfulRecipients.length;
+        const unsuccessful = unsuccessfulRecipients.length;
         const totalCount = recipients.length;
         const summary = {
             message,
             totalCount,
             successful,
-            unsucessful,
+            unsuccessful,
             unsuccessfulRecipients
         };
-        console.log({
-            message,
-            totalCount,
-            successful,
-            unsucessful,
-            unsuccessfulRecipients
-        })
+        console.log(summary)
         const newMessage = await Message.create(summary)
         newMessage.save();
         revalidateTag("message")
@@ -97,15 +94,15 @@ export const sendReminder = async () => {
         };
         return JSON.stringify(response);
     } catch (err) {
+        console.log(err);
         return handleError(err)
     }
-
 };
-
 
 
 export const findAllMessages = async () => {
     try {
+        await connectMongoDB();
         const messages = await Message.find();
         const response = {
             status: 200,
@@ -119,6 +116,7 @@ export const findAllMessages = async () => {
 };
 export const findMessage = async (messageID: string) => {
     try {
+        await connectMongoDB();
         const message = await Message.findById(messageID);
         const response = {
             status: 200,
@@ -132,6 +130,7 @@ export const findMessage = async (messageID: string) => {
 };
 export const deleteMessage = async (messageID: string) => {
     try {
+        await connectMongoDB();
         await Message.findByIdAndDelete(messageID);
         const response = {
             status: 200,

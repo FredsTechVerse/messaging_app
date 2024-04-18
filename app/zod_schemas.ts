@@ -16,12 +16,7 @@ const UserSchema = z.object({
 });
 
 const MessageSchema = z.object({
-    names: z
-        .string()
-        .min(1, "Atleast one name is required")
-        .max(40, "Cannot exceed 40 characters"),
-    message: z.string().min(1, "Description is required"),
-    email: z.string().email(),
+    message: z.string().min(1, "Message is required."),
 });
 
 export {

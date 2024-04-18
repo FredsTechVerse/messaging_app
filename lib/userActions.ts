@@ -57,6 +57,7 @@ export const registerUser = async ({
 export const findUserById = async (data: UserDataFetch) => {
     try {
         const { userID } = data
+        await connectMongoDB();
         const userData = await User.findById(userID)
         const response = {
             status: 200,
@@ -113,6 +114,7 @@ export const updateUserInformation = async (data: UserUpdateData) => {
 
 export const deleteUserById = async (data: UserDataFetch) => {
     try {
+        await connectMongoDB();
         const { userID } = data
         await User.findByIdAndDelete(userID)
         revalidateTag("user");

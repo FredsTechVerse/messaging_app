@@ -1,16 +1,18 @@
 "use client";
 import React, { FC } from "react";
 import { ActionBtn } from "@/app/components/custom";
-import UserFormState from "@/app/context/UserFormState";
-import { sendMessage } from "@/lib/messageActions";
+import MessageFormState from "@/app/context/MessageFormState";
 const ActionBtns: FC = () => {
-  const toggleUserForm = UserFormState((state) => state.toggleUserForm);
-  const resetUserID = UserFormState((state) => state.resetUserID);
+  const toggleMessageForm = MessageFormState(
+    (state) => state.toggleMessageForm
+  );
+  const resetMessageID = MessageFormState((state) => state.resetMessageID);
   return (
     <section className="ml-auto w-max flex-row-centered gap-2 ">
       <ActionBtn
         action={() => {
-          sendMessage();
+          resetMessageID();
+          toggleMessageForm();
         }}
         text="Message"
       />
