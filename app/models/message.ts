@@ -2,10 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const MessageSchema = new Schema(
     {
-        phone: { type: String, required: true },
         message: { type: String, required: true },
-        recipient: [{ type: String, required: true }],
-        status: { type: String, required: true },
+        totalCount: { type: Number, required: true },
+        successful: { type: Number, required: true },
+        unsuccessful: { type: Number, required: true },
+        unsuccessfulRecipients: [{ type: String, required: true }],
     },
     {
         timestamps: true,

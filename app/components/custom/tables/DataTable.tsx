@@ -89,7 +89,7 @@ export default function DataTable<TData, TValue>({
               Columns
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-white">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())

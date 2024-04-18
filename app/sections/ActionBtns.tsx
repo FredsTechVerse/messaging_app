@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 import { ActionBtn } from "@/app/components/custom";
 import UserFormState from "@/app/context/UserFormState";
-
+import { sendReminder } from "@/lib/messageActions";
 const ActionBtns: FC = () => {
   const toggleUserForm = UserFormState((state) => state.toggleUserForm);
   const resetUserID = UserFormState((state) => state.resetUserID);
@@ -14,6 +14,12 @@ const ActionBtns: FC = () => {
           toggleUserForm();
         }}
         text="add user"
+      />
+      <ActionBtn
+        action={() => {
+          sendReminder();
+        }}
+        text="send reminder"
       />
     </section>
   );

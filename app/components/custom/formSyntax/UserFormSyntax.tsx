@@ -66,9 +66,9 @@ const UserFormSyntax: FC<UserFormProps> = ({
           </div>
           {/* CONTACT SECTION */}
           <div className="input-wrap">
-            <div className="input-wrap">
+            <div className="w-full">
               <label htmlFor="contact">Contact</label>
-              <div className="flex phone:gap-3 tablet:gap-2">
+              <div className="flex phone:gap-3 tablet:gap-2 w-full">
                 <input
                   className="input-styling w-16"
                   type="Text"
@@ -78,7 +78,7 @@ const UserFormSyntax: FC<UserFormProps> = ({
                 />
                 <input
                   readOnly={!isEditEnabled}
-                  className="input-styling phone:w-52  tablet:w-72"
+                  className="input-styling w-full"
                   placeholder="Safaricom No."
                   {...register("contact")}
                 />

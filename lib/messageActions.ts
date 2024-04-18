@@ -1,93 +1,110 @@
+"use server"
 import Message from "../app/models/message";
-import User from "../app/models/user";
 const AfricasTalking = require('africastalking');
-
 import { handleError } from "./errorHandling";
 import { sendEmail } from "./emailActions";
+import { revalidateTag } from "next/cache";
 
-interface messageCredentials {
-    message: string;
-    recipients: string[];
-    email: string;
-    role: string;
-}
-
-interface Users {
-    message: string;
-    role: string;
-}
-
-const smsConfig = {
-    headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.SMS_API_KEY,
-    },
-};
-
-//CONSUMING AFRICAS TALKING API
-
-// TODO: Initialize Africa's Talking
 const africastalking = AfricasTalking({
-    apiKey: '3da009aa0a2a692678c835d7699ede7181d3eef274baa1fcbfe079f4aff2cf10',
-    username: 'sandbox'
+    apiKey: 'e30f2d6a7b7eba5e9962c36113e09252e5bf8c32d946b6fcd3f124b50b25cd74',
+    username: 'fredstechverse'
 });
 
-const sendSMS: any = async () => {
-
-    // TODO: Send message
+interface Recipient {
+    cost: string,
+    messageId: string,
+    messageParts: number,
+    number: string,
+    status: string,
+    statusCode: string
+}
+export const sendMessage = async () => {
     try {
-
-    } catch (ex) {
-        console.error(ex);
-    }
-};
-
-const sendMessage = async ({ message, recipients, role }: any) => {
-    try {
-        const processedContacts = recipients.map(
-            (recipient: any) => `+${recipient}`
-        );
-
+        const message = "Lorem ipsum , Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
-            to: processedContacts,
-            message: 'Yoh>>.. Good stuff',
-            from: process.env.USERNAME
+            from: 'DIGISPEAR',
+            to: "+254112615416",
+            message,
         });
-
-        const messagePayload = { ...result, status: "delivered", role };
-        const messageData = await Message.create(messagePayload);
-        messageData.save();
+        // const result = JSON.parse(data)
+        const recipients: Recipient[] = result.SMSMessageData.Recipients;
+        const successful = recipients.filter(recipient => recipient.status === "Success").length;
+        const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
+        const unsucessful = unsuccessfulRecipients.length;
+        const totalCount = recipients.length;
+        const summary = {
+            message,
+            totalCount,
+            successful,
+            unsucessful,
+            unsuccessfulRecipients
+        };
+        console.log({
+            message,
+            totalCount,
+            successful,
+            unsucessful,
+            unsuccessfulRecipients
+        })
+        const newMessage = await Message.create(summary)
+        newMessage.save();
+        revalidateTag("message")
         const response = {
-            status: 200,
-            message: "Message Sent",
-            payload: "Message send successfully",
+            status: 201,
+            message: "Message sent",
         };
         return JSON.stringify(response);
-    } catch (err: any) {
-        const emailMessage = `Error message ${JSON.stringify(
-            err.message
-        )} . Comprehensive error : ${JSON.stringify(err)}`;
-        sendEmail({
-            to: [process.env.TROUBLESHOOTING_EMAIL_ACCOUNT],
-            subject: "SMS SERVICE HAS BEEN INTERRUPTED",
-            text: emailMessage,
-            role,
-        });
-        const smsPayload = {
-            phone: process.env.SMS_CONTACT,
-            message: message,
-            recipient: [...recipients],
-        };
-        const messagePayload = { ...smsPayload, status: "rejected", role };
-
-        const messageData = await Message.create(messagePayload);
-        messageData.save();
-        return JSON.stringify(err);
+    } catch (err) {
+        return handleError(err)
     }
+
+};
+
+export const sendReminder = async () => {
+    try {
+        const message = "Lorem ipsum , Africa's Talking SMS test"
+        const result = await africastalking.SMS.send({
+            from: 'DIGISPEAR',
+            to: "+254112615416",
+            message,
+        });
+        // const result = JSON.parse(data)
+        const recipients: Recipient[] = result.SMSMessageData.Recipients;
+        const successful = recipients.filter(recipient => recipient.status === "Success").length;
+        const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
+        const unsucessful = unsuccessfulRecipients.length;
+        const totalCount = recipients.length;
+        const summary = {
+            message,
+            totalCount,
+            successful,
+            unsucessful,
+            unsuccessfulRecipients
+        };
+        console.log({
+            message,
+            totalCount,
+            successful,
+            unsucessful,
+            unsuccessfulRecipients
+        })
+        const newMessage = await Message.create(summary)
+        newMessage.save();
+        revalidateTag("message")
+        const response = {
+            status: 201,
+            message: "Message sent",
+        };
+        return JSON.stringify(response);
+    } catch (err) {
+        return handleError(err)
+    }
+
 };
 
 
-const findAllMessages = async () => {
+
+export const findAllMessages = async () => {
     try {
         const messages = await Message.find();
         const response = {
@@ -100,7 +117,7 @@ const findAllMessages = async () => {
         return handleError(err);
     }
 };
-const findMessage = async (messageID: string) => {
+export const findMessage = async (messageID: string) => {
     try {
         const message = await Message.findById(messageID);
         const response = {
@@ -113,7 +130,7 @@ const findMessage = async (messageID: string) => {
         return handleError(err);
     }
 };
-const deleteMessage = async (messageID: string) => {
+export const deleteMessage = async (messageID: string) => {
     try {
         await Message.findByIdAndDelete(messageID);
         const response = {
@@ -126,9 +143,4 @@ const deleteMessage = async (messageID: string) => {
     }
 };
 
-export {
-    sendMessage,
-    findAllMessages,
-    findMessage,
-    deleteMessage,
-};
+
