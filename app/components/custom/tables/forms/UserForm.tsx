@@ -76,7 +76,7 @@ const UserForm: FC = () => {
       let data = await registerUser({
         firstName: fName.trim(),
         surname: surname.trim(),
-        amount: amount.trim(),
+        amount,
         contact: `254${contact.trim()}`,
       });
 
@@ -97,7 +97,7 @@ const UserForm: FC = () => {
         userID,
         firstName: fName.trim(),
         surname: surname.trim(),
-        amount: amount.trim(),
+        amount,
         contact: `254${contact.trim()}`,
       });
       setIsUserFormSubmitted(false);
@@ -106,7 +106,6 @@ const UserForm: FC = () => {
 
   return (
     <UserFormSyntax
-      role={role}
       handleSubmit={handleSubmit}
       saveUser={saveUser}
       isEditEnabled={isEditEnabled}

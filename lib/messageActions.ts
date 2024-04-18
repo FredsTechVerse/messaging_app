@@ -54,9 +54,7 @@ const sendMessage = async ({ message, recipients, role }: any) => {
             from: process.env.USERNAME
         });
 
-
         const messagePayload = { ...result, status: "delivered", role };
-        console.log({ messagePayload })
         const messageData = await Message.create(messagePayload);
         messageData.save();
         const response = {

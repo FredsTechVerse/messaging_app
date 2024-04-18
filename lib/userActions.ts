@@ -1,5 +1,4 @@
 "use server";
-
 import User from "@/app/models/user";
 import { revalidateTag } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
@@ -43,6 +42,7 @@ export const registerUser = async ({
         await connectMongoDB();
         const newUser = await User.create(credentials);
         newUser.save();
+        revalidateTag("user");
         const response = {
             status: 201,
             message: "User registered",
@@ -50,7 +50,6 @@ export const registerUser = async ({
         };
         return JSON.stringify(response);
     } catch (err) {
-        console.log({ userRegistrationError: err })
         return handleError(err);
     }
 };
@@ -69,6 +68,22 @@ export const findUserById = async (data: UserDataFetch) => {
         return handleError(err);
     }
 };
+
+export const findAllUsers = async () => {
+    try {
+        await connectMongoDB();
+        const userData = await User.find()
+        const response = {
+            status: 200,
+            message: "Users Found",
+            payload: userData,
+        };
+        return JSON.stringify(response);
+    } catch (err) {
+        return handleError(err);
+    }
+};
+
 
 
 
@@ -100,6 +115,7 @@ export const deleteUserById = async (data: UserDataFetch) => {
     try {
         const { userID } = data
         await User.findByIdAndDelete(userID)
+        revalidateTag("user");
         const response = {
             status: 200,
             message: "User deleted ",

@@ -1,10 +1,21 @@
-import { SampleTable } from "@/app/components/custom";
-import { Forms, ActionBtns } from "@/app/sections";
-export default function Home() {
+import { User, columns } from "./columns";
+import { DataTable } from "@/app/components/custom";
+import { ActionBtns } from "@/app/sections";
+import { findAllUsers } from "@/lib/userActions";
+
+export default async function Page() {
+  const data: any = await findAllUsers();
+  const userData = await JSON.parse(data);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <ActionBtns />
-      <SampleTable />
-    </main>
+    <section className="py-12">
+      <div className="w-full">
+        <div className="flex items-center w-full justify-between">
+          <h1 className="text-3xl font-bold">INUA COMRADE</h1>
+          <ActionBtns />
+        </div>
+
+        <DataTable columns={columns} data={userData.payload} />
+      </div>
+    </section>
   );
 }

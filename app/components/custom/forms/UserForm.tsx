@@ -70,36 +70,40 @@ const UserForm: FC = () => {
 
   const saveUser = async (data: any) => {
     const { fName, surname, contact, amount } = data;
+    try {
+      if (!userID) {
+        setIsUserFormSubmitted(true);
+        let data = await registerUser({
+          firstName: fName.trim(),
+          surname: surname.trim(),
+          amount,
+          contact: `254${contact.trim()}`,
+        });
 
-    if (!userID) {
-      setIsUserFormSubmitted(true);
-      let data = await registerUser({
-        firstName: fName.trim(),
-        surname: surname.trim(),
-        amount: amount.trim(),
-        contact: `254${contact.trim()}`,
-      });
-
-      setIsUserFormSubmitted(false);
-      const userData = JSON.parse(data);
-      const { status, message } = userData;
-      if (status === 200 || status === 201) {
-        const { _id: userID } = userData.payload;
-        handleUISuccess({ message, updateAlertBoxData });
-        setUserID(userID);
-        toggleUserForm();
+        setIsUserFormSubmitted(false);
+        const userData = JSON.parse(data);
+        const { status, message } = userData;
+        if (status === 200 || status === 201) {
+          const { _id: userID } = userData.payload;
+          handleUISuccess({ message, updateAlertBoxData });
+          setUserID(userID);
+          toggleUserForm();
+        } else {
+          handleUIErrors({ status, message, updateAlertBoxData });
+          setIsUserFormSubmitted(false);
+        }
       } else {
-        handleUIErrors({ status, message, updateAlertBoxData });
+        setIsUserFormSubmitted(true);
+        await updateUserInformation({
+          userID,
+          firstName: fName.trim(),
+          surname: surname.trim(),
+          amount,
+          contact: `254${contact.trim()}`,
+        });
         setIsUserFormSubmitted(false);
       }
-    } else {
-      updateUserInformation({
-        userID,
-        firstName: fName.trim(),
-        surname: surname.trim(),
-        amount: amount.trim(),
-        contact: `254${contact.trim()}`,
-      });
+    } catch (err) {
       setIsUserFormSubmitted(false);
     }
   };

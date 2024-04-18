@@ -108,7 +108,7 @@ const UserFormSyntax: FC<UserFormProps> = ({
                 type="submit"
                 className="bg-slate-700 hover:bg-slate-900 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm "
               >
-                {!isUserFormSubmitted ? "Saved" : "Saving"}
+                {!isUserFormSubmitted ? "Save" : "Saving"}
               </button>
               <ActionBtn
                 variant="cancel"
