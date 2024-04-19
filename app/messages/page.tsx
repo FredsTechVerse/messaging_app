@@ -7,7 +7,7 @@ export default async function Page() {
   const data: any = await findAllMessages();
   const messageData = await JSON.parse(data);
   return (
-    <section className="py-5">
+    <section className="py-5 pb-10">
       <div className="w-full ">
         <div className="flex items-center w-full justify-between pb-10">
           <h1 className="text-3xl font-bold">MESSAGES</h1>
