@@ -29,7 +29,7 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
   return (
     <Modal>
       <div className="form-wrap  my-5 pb-2 ">
-        <FormNavigation disableForm={toggleMessageForm} text="Message Form" />
+        <FormNavigation disableForm={toggleMessageForm} text="Message" />
         <form
           className="form-styling gap-2"
           onSubmit={handleSubmit(saveMessage)}

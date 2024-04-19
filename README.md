@@ -3,11 +3,6 @@
 ## BUILD
 
 - Add character count.
-- Add bulk message confirmation box.
-
-## ERRORS
-
-- Correct form btn logic.
 - Know why pnpm ain't loading next js enviroment variables.
 
 ## AFRICAS TALKING API

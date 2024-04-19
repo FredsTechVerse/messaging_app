@@ -6,8 +6,8 @@ import { Forms } from "./sections";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Messaging Application",
-  description: "A custom messaging solution",
+  title: "INUA COMRADE",
+  description: "A messaging solution for the inua comrade initiative.",
 };
 
 export default function RootLayout({
