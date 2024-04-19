@@ -74,6 +74,7 @@ export const findAllUsers = async () => {
     try {
         await connectMongoDB();
         const userData = await User.find()
+        revalidateTag("user");
         const response = {
             status: 200,
             message: "Users Found",
