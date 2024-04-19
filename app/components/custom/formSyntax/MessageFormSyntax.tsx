@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FormNavigation, ErrorMessage, Modal } from "..";
+import { FormNavigation, ErrorMessage, Modal, ActionBtn } from "..";
 import messageFormState from "@/app/context/MessageFormState";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -24,10 +24,11 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
   const toggleMessageForm = messageFormState(
     (state) => state.toggleMessageForm
   );
+  const messageID = messageFormState((state) => state.messageID);
   const { names, message, email } = errors;
   return (
     <Modal>
-      <div className="form-wrap  my-5 ">
+      <div className="form-wrap  my-5 pb-2 ">
         <FormNavigation disableForm={toggleMessageForm} text="Message Form" />
         <form
           className="form-styling gap-2"
@@ -43,13 +44,21 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
             />
             {message && <ErrorMessage message={message.message} />}
           </div>
-
-          <button
-            type="submit"
-            className="bg-primary hover:bg-primary/80 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm my-2 "
-          >
-            Submit
-          </button>
+          {!messageID ? (
+            <button
+              type="submit"
+              className="bg-primary hover:bg-primary/80 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm my-2 "
+            >
+              Submit
+            </button>
+          ) : (
+            <ActionBtn
+              text="close"
+              action={() => {
+                toggleMessageForm();
+              }}
+            />
+          )}
         </form>
       </div>
     </Modal>

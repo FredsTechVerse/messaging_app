@@ -4,13 +4,24 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MessageSchema } from "@/app/zod_schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { findMessage, sendMessage } from "@/lib/messageActions";
-interface MessageForm {
+import { findMessage, sendBulkMessage } from "@/lib/messageActions";
+import ConfirmationFormState from "@/app/context/MessageConfirmationFormState";
+import MessageFormState from "@/app/context/MessageFormState";
+interface MessageFormProps {
   message: string;
 }
 
 const MessageForm: FC = (props) => {
   const [isEditEnabled, setIsEditEnabled] = useState(false);
+  const setMessageType = ConfirmationFormState((state) => state.setMessageType);
+  const setMessage = ConfirmationFormState((state) => state.setMessage);
+  const messageID = MessageFormState((state) => state.messageID);
+  const toggleConfirmationForm = ConfirmationFormState(
+    (state) => state.toggleConfirmationForm
+  );
+  const toggleMessageForm = MessageFormState(
+    (state) => state.toggleMessageForm
+  );
   const enableEdit = () => {
     setIsEditEnabled(true);
   };
@@ -20,22 +31,33 @@ const MessageForm: FC = (props) => {
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
-  } = useForm<MessageForm>({
+  } = useForm<MessageFormProps>({
     resolver: zodResolver(MessageSchema),
   });
 
+  const fetchMessage = async (messageID: string) => {
+    const data = await findMessage(messageID);
+    const messageData = JSON.parse(data);
+    const { message } = messageData.payload;
+    setValue("message", message);
+    setIsEditEnabled(false);
+  };
   useEffect(() => {
-    findMessage("string");
-    setIsEditEnabled(true);
+    if (messageID) {
+      fetchMessage(messageID);
+    } else {
+      setIsEditEnabled(true);
+    }
   }, []);
 
   const submitMessage = async (data: any) => {
     const { message } = data;
-    await sendMessage({ message });
-    console.log({ message });
-    console.log(data);
+    setMessage(message);
+    toggleConfirmationForm();
+    toggleMessageForm();
   };
 
   return (

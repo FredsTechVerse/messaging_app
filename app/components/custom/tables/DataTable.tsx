@@ -78,18 +78,24 @@ export default function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn("firstName")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm border-[1px] border-slate-400"
           />
         </div>
 
         {/* Column visibility */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button
+              variant="outline"
+              className="ml-auto border-[1px] border-slate-400"
+            >
               Columns
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-white">
+          <DropdownMenuContent
+            align="end"
+            className="bg-white border-[1px] border-slate-400"
+          >
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())

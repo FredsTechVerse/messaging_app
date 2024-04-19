@@ -37,7 +37,7 @@ const UserFormSyntax: FC<UserFormProps> = ({
   return (
     <Modal>
       <div className="form-wrap ">
-        <FormNavigation text="User Registration" disableForm={toggleUserForm} />
+        <FormNavigation text="Registration" disableForm={toggleUserForm} />
         <form className="form-styling" onSubmit={handleSubmit(saveUser)}>
           <div className="input-wrap">
             <label htmlFor="names">Names</label>

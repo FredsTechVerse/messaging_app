@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import UserFormState from "@/app/context/UserFormState";
 import { handleUIErrors, handleUISuccess } from "@/lib/responseHandler";
 
-interface UserForm {
+interface UserFormProps {
   fName: string;
   surname: string;
   email: string;
@@ -46,7 +46,7 @@ const UserForm: FC = () => {
     formState: { errors },
     setValue,
     watch,
-  } = useForm<UserForm>({
+  } = useForm<UserFormProps>({
     resolver: zodResolver(UserSchema),
   });
 
@@ -102,6 +102,7 @@ const UserForm: FC = () => {
           contact: `254${contact.trim()}`,
         });
         setIsUserFormSubmitted(false);
+        toggleUserForm();
       }
     } catch (err) {
       setIsUserFormSubmitted(false);

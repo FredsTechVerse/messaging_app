@@ -18,7 +18,8 @@ interface Recipient {
     status: string,
     statusCode: string
 }
-export const sendMessage = async ({ message }: { message: string }) => {
+interface Message { message: string }
+export const sendBulkMessage = async ({ message }: Message) => {
     console.log("Message being sent");
     console.log(message);
     try {
@@ -65,6 +66,7 @@ export const sendMessage = async ({ message }: { message: string }) => {
 
 export const sendReminder = async () => {
     try {
+        // Reminder will be generated from system via looping through the system data.
         const message = "Good Reminder, Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
@@ -116,8 +118,10 @@ export const findAllMessages = async () => {
 };
 export const findMessage = async (messageID: string) => {
     try {
+        console.log(messageID);
         await connectMongoDB();
         const message = await Message.findById(messageID);
+        console.log({ message })
         const response = {
             status: 200,
             message: "Message found!",

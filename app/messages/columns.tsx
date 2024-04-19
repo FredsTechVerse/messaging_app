@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
-import { ActionMenu } from "@/app/components/custom";
+import { MessageTableActionBtns } from "@/app/components/custom";
 
 export type Message = {
   _id: string;
@@ -33,8 +33,8 @@ export const columns: ColumnDef<Message>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const user = row.original;
-      return <ActionMenu userID={user._id} />;
+      const message = row.original;
+      return <MessageTableActionBtns messageID={message._id} />;
     },
   },
 ];

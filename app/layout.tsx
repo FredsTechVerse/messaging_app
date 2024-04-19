@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AlertBox } from "./components/custom";
+import { AlertBox, MenuBtn, Navbar } from "./components/custom";
 import { Forms } from "./sections";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +20,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className="relative flex w-full h-screen  bg-white">
           <AlertBox />
+          <MenuBtn />
+          <Navbar />
           <article className="relative w-full flex flex-col gap-5 h-screen px-5 overflow-auto ">
             {children}
           </article>
