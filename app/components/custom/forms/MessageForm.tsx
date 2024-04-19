@@ -51,7 +51,7 @@ const MessageForm: FC = (props) => {
     } else {
       setIsEditEnabled(true);
     }
-  }, []);
+  }, [messageID]);
 
   const submitMessage = async (data: any) => {
     const { message } = data;
