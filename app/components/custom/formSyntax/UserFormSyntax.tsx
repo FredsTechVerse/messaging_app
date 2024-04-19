@@ -44,7 +44,7 @@ const UserFormSyntax: FC<UserFormProps> = ({
             <div className="input-wrap">
               <input
                 readOnly={!isEditEnabled}
-                maxLength={15}
+                maxLength={12}
                 className="input-styling"
                 placeholder="First Name"
                 {...register("fName")}
@@ -56,7 +56,7 @@ const UserFormSyntax: FC<UserFormProps> = ({
                 readOnly={!isEditEnabled}
                 className="input-styling"
                 placeholder="Last Name"
-                maxLength={15}
+                maxLength={12}
                 {...register("surname")}
               />
               {errors.surname && (

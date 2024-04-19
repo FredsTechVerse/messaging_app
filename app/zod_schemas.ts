@@ -3,11 +3,11 @@ const UserSchema = z.object({
     fName: z
         .string()
         .min(1, "First name is required")
-        .max(12, "Cannot exceed 20 characters"),
+        .max(12, "Cannot exceed 12 characters"),
     surname: z
         .string()
         .min(1, "Last Name is required")
-        .max(12, "Cannot exceed 20 characters"),
+        .max(12, "Cannot exceed 12 characters"),
     amount: z.number().positive().gte(1),
     contact: z
         .string()

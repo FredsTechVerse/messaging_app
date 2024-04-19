@@ -6,8 +6,8 @@ import { sendEmail } from "./emailActions";
 import { revalidateTag } from "next/cache";
 import connectMongoDB from "./mongodb";
 const africastalking = AfricasTalking({
-    apiKey: 'e30f2d6a7b7eba5e9962c36113e09252e5bf8c32d946b6fcd3f124b50b25cd74',
-    username: 'fredstechverse'
+    apiKey: process.env.SMS_API_KEY,
+    username: process.env.SMS_USERNAME
 });
 
 interface Recipient {
@@ -25,11 +25,10 @@ export const sendBulkMessage = async ({ message }: Message) => {
     try {
         // const message = "Lorem ipsum , Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
-            from: 'DIGISPEAR',
-            to: "+254112615416",
+            from: process.env.SMS_SENDERID,
+            to: ["+254112615416", "+254110409672"],
             message,
         });
-        // const result = JSON.parse(data)
         const recipients: Recipient[] = result.SMSMessageData.Recipients;
         const successful = recipients.filter(recipient => recipient.status === "Success").length;
         const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
@@ -70,7 +69,7 @@ export const sendReminder = async () => {
         const message = "Good Reminder, Africa's Talking SMS test"
         const result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
-            to: "+254112615416",
+            to: ["+254112615416", "+254110409672"],
             message,
         });
         // const result = JSON.parse(data)
