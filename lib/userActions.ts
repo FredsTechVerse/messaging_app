@@ -41,7 +41,6 @@ export const registerUser = async ({
         await connectMongoDB();
         const newUser = await User.create(credentials);
         newUser.save();
-        // revalidateTag("user");
         revalidatePath("/")
         const response = {
             status: 201,
@@ -99,7 +98,7 @@ export const updateUserInformation = async (data: UserUpdateData) => {
             amount
         };
         const savedUserData = await User.findByIdAndUpdate(userID, updatedUserData);
-        revalidateTag("user");
+        revalidatePath("/");
         const response = {
             status: 200,
             message: "User Information Updated",
@@ -117,7 +116,7 @@ export const deleteUserById = async (data: UserDataFetch) => {
         await connectMongoDB();
         const { userID } = data
         await User.findByIdAndDelete(userID)
-        revalidateTag("user");
+        revalidatePath("/");
         const response = {
             status: 200,
             message: "User deleted ",

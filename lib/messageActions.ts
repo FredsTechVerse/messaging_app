@@ -3,7 +3,7 @@ import Message from "../app/models/message";
 const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
 import { sendEmail } from "./emailActions";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
 const africastalking = AfricasTalking({
     apiKey: process.env.SMS_API_KEY,
@@ -50,7 +50,7 @@ export const sendBulkMessage = async ({ message }: Message) => {
         })
         const newMessage = await Message.create(summary)
         newMessage.save();
-        revalidateTag("message")
+        revalidatePath("/message")
         const response = {
             status: 201,
             message: "Message sent",
@@ -88,7 +88,7 @@ export const sendReminder = async () => {
         console.log(summary)
         const newMessage = await Message.create(summary)
         newMessage.save();
-        revalidateTag("message")
+        revalidatePath("/message")
         const response = {
             status: 201,
             message: "Message sent",
