@@ -1,9 +1,8 @@
 "use server";
 import User from "@/app/models/user";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
 import connectMongoDB from "@/lib/mongodb";
-
 interface UserUpdateData {
     userID: string;
     firstName: string;
@@ -42,7 +41,8 @@ export const registerUser = async ({
         await connectMongoDB();
         const newUser = await User.create(credentials);
         newUser.save();
-        revalidateTag("user");
+        // revalidateTag("user");
+        revalidatePath("/")
         const response = {
             status: 201,
             message: "User registered",
