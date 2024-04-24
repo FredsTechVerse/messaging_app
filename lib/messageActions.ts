@@ -2,15 +2,15 @@
 import Message from "../app/models/message";
 const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
-import { sendEmail } from "./emailActions";
-import { revalidateTag, revalidatePath } from "next/cache";
+import User from "@/app/models/user";
+import { revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
 const africastalking = AfricasTalking({
     apiKey: process.env.SMS_API_KEY,
     username: process.env.SMS_USERNAME
 });
 
-interface Recipient {
+interface RecipientInfo {
     cost: string,
     messageId: string,
     messageParts: number,
@@ -18,93 +18,144 @@ interface Recipient {
     status: string,
     statusCode: string
 }
+
+
 interface Message { message: string }
-export const sendBulkMessage = async ({ message }: Message) => {
-    console.log("Message being sent");
-    console.log(message);
-    try {
-        // const message = "Lorem ipsum , Africa's Talking SMS test"
-        const result = await africastalking.SMS.send({
-            from: process.env.SMS_SENDERID,
-            to: ["+254112615416", "+254110409672"],
-            message,
-        });
-        const recipients: Recipient[] = result.SMSMessageData.Recipients;
-        const successful = recipients.filter(recipient => recipient.status === "Success").length;
-        const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
-        const unsuccessful = unsuccessfulRecipients.length;
-        const totalCount = recipients.length;
-        const summary = {
-            message,
-            totalCount,
-            successful,
-            unsuccessful,
-            unsuccessfulRecipients
-        };
-        console.log({
-            message,
-            totalCount,
-            successful,
-            unsucessful: unsuccessful,
-            unsuccessfulRecipients
-        })
-        const newMessage = await Message.create(summary)
-        newMessage.save();
-        revalidatePath("/message")
-        const response = {
-            status: 201,
-            message: "Message sent",
-        };
-        return JSON.stringify(response);
-    } catch (err) {
-        console.log(err);
-        return handleError(err)
-    }
 
-};
-
-export const sendReminder = async () => {
-    try {
-        // Reminder will be generated from system via looping through the system data.
-        const message = "Good Reminder, Africa's Talking SMS test"
-        const result = await africastalking.SMS.send({
+const sendMessage = async ({ users, message }: { users: UserInfo[], message: string }) => {
+    let successfulRecipients: string[] = []
+    let unsuccessfulRecipients: string[] = []
+    let messageFailed = false; // Flag to track if any messages have failed
+    let failureReason = ""
+    for (let i = 0; i < users.length; i++) {
+        let user = users[i]
+        let refinedContact = [`+${user.contact}`]
+        let result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
-            to: ["+254112615416", "+254110409672"],
+            to: refinedContact,
             message,
         });
-        // const result = JSON.parse(data)
-        const recipients: Recipient[] = result.SMSMessageData.Recipients;
-        const successful = recipients.filter(recipient => recipient.status === "Success").length;
-        const unsuccessfulRecipients = recipients.filter(recipient => recipient.status !== "Success").map((recipient) => recipient.number);
-        const unsuccessful = unsuccessfulRecipients.length;
-        const totalCount = recipients.length;
-        const summary = {
-            message,
-            totalCount,
-            successful,
-            unsuccessful,
-            unsuccessfulRecipients
-        };
-        console.log(summary)
+        let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
+        let isMessageSent = recipientsInfo[0].status === "Success"
+
+        if (isMessageSent) {
+            successfulRecipients.push(user.contact)
+        } else {
+            messageFailed = true; // Set flag indicating a failure
+            failureReason = recipientsInfo[0].statusCode
+            break; // Exit loop
+        }
+    }
+    // If a failure occurred, add remaining users to unsuccessfulRecipients
+    if (messageFailed) {
+        unsuccessfulRecipients.push(...users.slice(successfulRecipients.length).map(user => user.contact));
+    }
+    const summary = {
+        message,
+        totalCount: users.length,
+        successful: successfulRecipients.length,
+        unsuccessful: unsuccessfulRecipients.length,
+        unsuccessfulRecipients: unsuccessfulRecipients,
+        successfulRecipients,
+        category: "Message",
+    };
+    if (unsuccessfulRecipients.length == 0) {
         const newMessage = await Message.create(summary)
         newMessage.save();
-        revalidatePath("/message")
+    } else {
+        const newMessage = await Message.create({ ...summary, failureReason })
+        newMessage.save();
+    }
+    revalidatePath("/message")
+}
+
+const sendReminder = async () => {
+    let users: UserInfo[] = await User.find()
+    let successfulRecipients: string[] = []
+    let unsuccessfulRecipients: string[] = []
+    let messageFailed = false; // Flag to track if any messages have failed
+    let failureReason = ""
+    for (let i = 0; i < users.length; i++) {
+        let user = users[i]
+        let capitalizedName = user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase();
+        let message = `Greetings ${capitalizedName}, Reminder to honor your Ksh${user.amount} pledge for the Inua Comrade Initiative to empower fellow Christians and enhance our worship experience. Donate via Till No 123456 (Shadrack Wahinya).Thank you for your generosity. Dekut Catholic Students For more information reach out to : 0110409672`
+        let refinedContact = [`+${user.contact}`]
+        let result = await africastalking.SMS.send({
+            from: 'DIGISPEAR',
+            to: refinedContact,
+            message,
+        });
+        let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
+        let isMessageSent = recipientsInfo[0].status === "Success"
+
+        if (isMessageSent) {
+            successfulRecipients.push(user.contact)
+        } else {
+            messageFailed = true; // Set flag indicating a failure
+            failureReason = recipientsInfo[0].statusCode
+            break; // Exit loop
+        }
+    }
+    // If a failure occurred, add remaining users to unsuccessfulRecipients
+    if (messageFailed) {
+        unsuccessfulRecipients.push(...users.slice(successfulRecipients.length).map(user => user.contact));
+    }
+    const summary = {
+        totalCount: users.length,
+        successful: successfulRecipients.length,
+        unsuccessful: unsuccessfulRecipients.length,
+        unsuccessfulRecipients: unsuccessfulRecipients,
+        successfulRecipients,
+        category: "Reminder",
+
+    };
+    if (unsuccessfulRecipients.length == 0) {
+        const newMessage = await Message.create(summary)
+        newMessage.save();
+    } else {
+        const newMessage = await Message.create({ ...summary, failureReason })
+        newMessage.save();
+    }
+    revalidatePath("/message")
+};
+
+
+export const sendBulkMessage = async ({ message }: Message) => {
+    try {
+        const users = await User.find()
+        sendMessage({ users, message })
         const response = {
             status: 201,
             message: "Message sent",
         };
         return JSON.stringify(response);
     } catch (err) {
-        console.log(err);
         return handleError(err)
     }
+
 };
+
+export const sendBulkReminder = async () => {
+    try {
+        sendReminder();
+        const response = {
+            status: 201,
+            message: "Message sent",
+        };
+        return JSON.stringify(response);
+    } catch (err) {
+        return handleError(err)
+    }
+
+};
+
+
 
 
 export const findAllMessages = async () => {
     try {
         await connectMongoDB();
-        const messages = await Message.find();
+        const messages = await Message.find({ category: "Message" })
         const response = {
             status: 200,
             message: "All messages have been found",
@@ -115,12 +166,25 @@ export const findAllMessages = async () => {
         return handleError(err);
     }
 };
+
+export const findAllReminders = async () => {
+    try {
+        await connectMongoDB();
+        const messages = await Message.find({ category: "Reminder" })
+        const response = {
+            status: 200,
+            message: "All reminders have been found",
+            payload: messages,
+        };
+        return JSON.stringify(response);
+    } catch (err) {
+        return handleError(err);
+    }
+};
 export const findMessage = async (messageID: string) => {
     try {
-        console.log(messageID);
         await connectMongoDB();
         const message = await Message.findById(messageID);
-        console.log({ message })
         const response = {
             status: 200,
             message: "Message found!",

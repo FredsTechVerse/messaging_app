@@ -13,6 +13,7 @@ const Navbar: React.FC = () => {
     >
       <NavBtn to="/" text="home" />
       <NavBtn to="/messages" text="messages" />
+      <NavBtn to="/reminders" text="reminders" />
     </article>
   );
 };

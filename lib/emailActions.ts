@@ -15,7 +15,6 @@ const sendEmail = async ({
     to: emails,
     subject,
     text,
-    role = "EM-203",
 }: any) => {
     try {
         const transporter = nodemailer.createTransport({
@@ -29,8 +28,8 @@ const sendEmail = async ({
         const emailConfig = {
             from: process.env.EMAIL_ACCOUNT,
             to: emails,
-            subject: subject,
-            text: text,
+            subject,
+            text,
         };
         const info = await transporter.sendMail(emailConfig);
         if (info.accepted.length > 0) {
@@ -39,7 +38,6 @@ const sendEmail = async ({
                 to: info.accepted,
                 subject,
                 text,
-                role,
                 status: "delivered",
             });
             emailData.save();
@@ -50,7 +48,6 @@ const sendEmail = async ({
                 to: info.rejected,
                 subject,
                 text,
-                role,
                 status: "rejected",
             });
             emailData.save();

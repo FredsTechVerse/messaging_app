@@ -1,9 +1,10 @@
 "use client";
 import { FC } from "react";
 import { FormNavigation, Modal, ActionBtn } from "@/app/components/custom";
+import { handleUISuccess, handleUIErrors } from "@/lib/responseHandler";
 import MessageConfirmationFormState from "@/app/context/MessageConfirmationFormState";
 import AlertBoxState from "@/app/context/AlertBoxState";
-import { sendReminder, sendBulkMessage } from "@/lib/messageActions";
+import { sendBulkReminder, sendBulkMessage } from "@/lib/messageActions";
 const MessageConfirmationForm: FC = () => {
   const updateAlertBoxData = AlertBoxState((state) => state.updateAlertBoxData);
   const message = MessageConfirmationFormState((state) => state.message);
@@ -15,12 +16,18 @@ const MessageConfirmationForm: FC = () => {
   );
   const handleConfirmation = async () => {
     toggleConfirmationForm();
-    console.log({ messageType });
     if (messageType === "bulk messages") {
-      await sendBulkMessage({ message });
+      let data = await sendBulkMessage({ message });
+      const userData = JSON.parse(data);
+      const { status, message: messageInfo } = userData;
+      if (status === 200 || status === 201) {
+        handleUISuccess({ message: messageInfo, updateAlertBoxData });
+      } else {
+        handleUIErrors({ status, message: messageInfo, updateAlertBoxData });
+      }
       return;
     } else if (messageType === "reminders") {
-      await sendReminder();
+      await sendBulkReminder();
       return;
     } else {
       toggleConfirmationForm();

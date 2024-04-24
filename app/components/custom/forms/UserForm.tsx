@@ -12,7 +12,12 @@ import {
 
 import AlertBoxState from "@/app/context/AlertBoxState";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import {
+  useForm,
+  FieldValues,
+  UseFormReturn,
+  SubmitHandler,
+} from "react-hook-form";
 import UserFormState from "@/app/context/UserFormState";
 import { handleUIErrors, handleUISuccess } from "@/lib/responseHandler";
 
@@ -68,7 +73,7 @@ const UserForm: FC = () => {
     fetchData(userID);
   }, [userID, setValue]);
 
-  const saveUser = async (data: any) => {
+  const saveUser = async (data: UserFormProps) => {
     const { fName, surname, contact, amount } = data;
     try {
       if (!userID) {

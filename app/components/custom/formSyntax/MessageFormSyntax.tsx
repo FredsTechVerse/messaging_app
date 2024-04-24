@@ -3,7 +3,6 @@ import React from "react";
 import { FormNavigation, ErrorMessage, Modal, ActionBtn } from "..";
 import messageFormState from "@/app/context/MessageFormState";
 import { Textarea } from "@/components/ui/textarea";
-import { watch } from "fs";
 
 interface MessageFormProps {
   handleSubmit: any;
@@ -21,6 +20,7 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
   isEditEnabled,
   register,
   errors,
+  watch,
 }) => {
   const toggleMessageForm = messageFormState(
     (state) => state.toggleMessageForm
@@ -44,9 +44,9 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
               placeholder="Enter Message"
               {...register("message")}
             />
-            {/* <span className="text-xs font-thin">
-              {messageInfo?.length || 0}
-            </span> */}
+            <span className="text-xs font-thin">
+              Character Count {watch("message")?.length || 0}
+            </span>
             {message && <ErrorMessage message={message.message} />}
           </div>
           {!messageID ? (

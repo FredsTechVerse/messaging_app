@@ -2,8 +2,8 @@
 
 ## BUILD
 
-- Add character count.
-- Know why pnpm ain't loading next js enviroment variables.
+- Add date to reminders table
+- Setup retry functionality for the messages that have not been sent.
 
 ## AFRICAS TALKING API
 

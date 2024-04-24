@@ -1,3 +1,10 @@
+interface UserInfo {
+    firstName: string,
+    surname: string,
+    contact: string,
+    amount: number,
+}
+
 type AlertBoxProps = {
     response: string;
     isResponse: boolean;

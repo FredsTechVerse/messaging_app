@@ -10,7 +10,7 @@ const ActionBtns: FC = () => {
   const setMessageType = MessageConfirmationFormState(
     (state) => state.setMessageType
   );
-  
+
   const resetMessageID = MessageFormState((state) => state.resetMessageID);
   return (
     <section className="ml-auto w-max flex-row-centered gap-2 ">
@@ -20,7 +20,7 @@ const ActionBtns: FC = () => {
           setMessageType("bulk messages");
           toggleMessageForm();
         }}
-        text="Bulk Message"
+        text="Send Bulk Message"
       />
     </section>
   );
