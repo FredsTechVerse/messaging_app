@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 export default async function Page() {
   const data = await findAllUsers();
   const userData = await JSON.parse(data);
-  console.log({ totalUsers: userData.payload.length });
   return (
     <section className="py-5 pb-10">
       <div className="w-full">

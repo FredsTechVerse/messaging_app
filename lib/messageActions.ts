@@ -69,6 +69,32 @@ const sendMessage = async ({ users, message }: { users: UserInfo[], message: str
     revalidatePath("/message")
 }
 
+const extrapolateAmount = (inputString: string) => {
+    console.log(inputString);
+    // Split the string by space
+    var parts = inputString && inputString.split(" ");
+
+    // Get the last part which is the cost
+    var costPart = parts && parts[parts.length - 1];
+
+    // Remove "KES" if needed
+    if (costPart.startsWith("KES")) {
+        costPart = costPart.substring(4);
+    }
+
+    // Convert the cost string to a floating-point number
+    var totalCost = parseFloat(costPart);
+
+    // Check if totalCost is a valid number
+    if (!isNaN(totalCost)) {
+        return totalCost;
+    } else {
+        console.log("No total cost found in the input string.");
+        return;
+    }
+};
+
+
 const sendReminder = async () => {
     let users: UserInfo[] = await User.find()
     let successfulRecipients: string[] = []
@@ -78,16 +104,17 @@ const sendReminder = async () => {
     for (let i = 0; i < users.length; i++) {
         let user = users[i]
         let capitalizedName = user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase();
-        let message = `Greetings ${capitalizedName}, Reminder to honor your Ksh${user.amount} pledge for the Inua Comrade Initiative to empower fellow Christians and enhance our worship experience. Donate via Till No 123456 (Shadrack Wahinya).Thank you for your generosity. Dekut Catholic Students For more information reach out to : 0110409672`
+        let message = `Greetings ${capitalizedName}, Reminder to honor your ${user.amount > 1 && `Ksh ${user.amount}`} pledge for the INUA COMRADE Initiative to empower fellow Christians by helping the less privilleged financially. Donate via Till No 4313956 (Shadrack Wahinya).Thank you for your generosity : DeKUT CATHOLIC STUDENTS - For more information reach out to : 0110409672`
         let refinedContact = [`+${user.contact}`]
         let result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
             to: refinedContact,
             message,
         });
+        // let smsCost = extrapolateAmount(result.SMSMessageData.Message);
         let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
-        let isMessageSent = recipientsInfo[0].status === "Success"
-
+        let isMessageSent = recipientsInfo[0].status === "Success";
+        // console.log({ smsCost });
         if (isMessageSent) {
             successfulRecipients.push(user.contact)
         } else {
