@@ -2,6 +2,7 @@
 import Message from "../app/models/message";
 const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
+// import User from "@/app/models/testUser";
 import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
@@ -69,8 +70,7 @@ const sendMessage = async ({ users, message }: { users: UserInfo[], message: str
     revalidatePath("/message")
 }
 
-const extrapolateAmount = (inputString: string) => {
-    console.log(inputString);
+const extrapolateAmount = (inputString: string): number => {
     // Split the string by space
     var parts = inputString && inputString.split(" ");
 
@@ -87,10 +87,11 @@ const extrapolateAmount = (inputString: string) => {
 
     // Check if totalCost is a valid number
     if (!isNaN(totalCost)) {
+        console.log("Total cost has been computed")
         return totalCost;
     } else {
         console.log("No total cost found in the input string.");
-        return;
+        return 0;
     }
 };
 
@@ -100,23 +101,25 @@ const sendReminder = async () => {
     let successfulRecipients: string[] = []
     let unsuccessfulRecipients: string[] = []
     let messageFailed = false; // Flag to track if any messages have failed
+    let unitCost;
     let failureReason = ""
     for (let i = 0; i < users.length; i++) {
         let user = users[i]
         let capitalizedName = user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase();
-        let message = `Greetings ${capitalizedName}, Reminder to honor your ${user.amount > 1 && `Ksh ${user.amount}`} pledge for the INUA COMRADE Initiative to empower fellow Christians by helping the less privilleged financially. Donate via Till No 4313956 (Shadrack Wahinya).Thank you for your generosity : DeKUT CATHOLIC STUDENTS - For more information reach out to : 0110409672`
+        let message = `Greetings ${capitalizedName}, Reminder to honor your ${user.amount > 1 ? `Ksh ${user.amount}` : ""} pledge for the INUA COMRADE Initiative to empower fellow Christians by helping the less privilleged financially. Donate via Till No 4313956 (Shadrack Wahinya).Thank you for your generosity : DeKUT CATHOLIC STUDENTS - For more information reach out to : 0110409672`
         let refinedContact = [`+${user.contact}`]
         let result = await africastalking.SMS.send({
             from: 'DIGISPEAR',
             to: refinedContact,
             message,
         });
-        // let smsCost = extrapolateAmount(result.SMSMessageData.Message);
+        unitCost = extrapolateAmount(result.SMSMessageData.Message);
         let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
         let isMessageSent = recipientsInfo[0].status === "Success";
-        // console.log({ smsCost });
+        // Dispersing contact to the two categories.
         if (isMessageSent) {
             successfulRecipients.push(user.contact)
+            break;
         } else {
             messageFailed = true; // Set flag indicating a failure
             failureReason = recipientsInfo[0].statusCode
@@ -136,6 +139,7 @@ const sendReminder = async () => {
         category: "Reminder",
 
     };
+
     if (unsuccessfulRecipients.length == 0) {
         const newMessage = await Message.create(summary)
         newMessage.save();
@@ -143,6 +147,7 @@ const sendReminder = async () => {
         const newMessage = await Message.create({ ...summary, failureReason })
         newMessage.save();
     }
+    console.log({ unitCost, summary })
     revalidatePath("/message")
 };
 

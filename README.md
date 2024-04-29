@@ -4,7 +4,6 @@
 
 - Add date to reminders table
 - Setup retry functionality for the messages that have not been sent.
-- Test with one contact.Send bulk messages. We can console.log everything.
 
 ## AFRICAS TALKING API
 

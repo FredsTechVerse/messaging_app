@@ -1,6 +1,7 @@
 "use server";
+// import User from "@/app/models/testUser";
 import User from "@/app/models/user";
-import { revalidateTag, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
 import connectMongoDB from "@/lib/mongodb";
 interface UserUpdateData {
