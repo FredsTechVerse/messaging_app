@@ -1,5 +1,9 @@
 # MESSAGING APPLICATION
 
+## COMMENTS
+
+- If it works for a small group , it will work for the masses. With a beast like africa's talking , communicating using messages has never been easier.
+
 ## BUILD
 
 - Add date to reminders table
