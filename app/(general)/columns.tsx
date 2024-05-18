@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
-import { ActionMenu } from "./components/custom";
+import { ActionMenu } from "../components/custom";
 import { calculateTotalAmount } from "@/lib/calculations";
 
 export const columns: ColumnDef<UserInfo>[] = [

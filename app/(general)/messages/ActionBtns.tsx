@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 import { ActionBtn } from "@/app/components/custom";
 import MessageFormState from "@/app/context/MessageFormState";
-import MessageConfirmationFormState from "../context/MessageConfirmationFormState";
+import MessageConfirmationFormState from "../../context/MessageConfirmationFormState";
 const ActionBtns: FC = () => {
   const toggleMessageForm = MessageFormState(
     (state) => state.toggleMessageForm

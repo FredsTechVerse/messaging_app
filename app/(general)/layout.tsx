@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { AlertBox, MenuBtn, Navbar } from "./components/custom";
+import "@/app/globals.css";
+import { AlertBox, MenuBtn, Navbar } from "../components/custom";
 import { Forms } from "./sections";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "INUA COMRADE",
-  description: "A messaging solution for the inua comrade initiative.",
+  description: "An accounting solution for the inua comrade initiative",
 };
 
 export default function RootLayout({

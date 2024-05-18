@@ -4,14 +4,14 @@ import UserFormState from "@/app/context/UserFormState";
 import MessageFormState from "@/app/context/MessageFormState";
 import MessageConfirmationFormState from "@/app/context/MessageConfirmationFormState";
 import DeleteConfirmationFormState from "@/app/context/DeleteConfirmationFormState";
-import PaymentFormState from "../context/PaymentFormState";
+import PaymentFormState from "../../context/PaymentFormState";
 import {
   UserForm,
   MessageForm,
   MessageConfirmationForm,
   PaymentForm,
   DeleteConfirmationForm,
-} from "../components/custom";
+} from "../../components/custom";
 
 const Forms: FC = () => {
   const isUserFormOpen = UserFormState((state) => state.isUserFormOpen);

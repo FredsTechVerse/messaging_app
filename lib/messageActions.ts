@@ -6,6 +6,7 @@ import User from "@/app/models/testUser";
 // import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
+import { extrapolateSMSCost } from "./calculations";
 const africastalking = AfricasTalking({
     apiKey: process.env.SMS_API_KEY,
     username: process.env.SMS_USERNAME
@@ -41,6 +42,7 @@ const sendATMessage = async ({ message, recipients }: { message: string, recipie
     return result
 
 }
+
 
 const sendMessage = async ({ users, message }: { users: UserInfo[], message: string }) => {
     let successfulRecipients: string[] = []
@@ -170,6 +172,59 @@ const sendReminder = async () => {
 
 };
 
+
+export const sendUserMessage = async ({ recipients, message }: { recipients: string[], message: string }) => {
+    let successfulRecipients: string[] = []
+    let unsuccessfulRecipients: string[] = []
+    let failureReason = "";
+    let totalCost = 0
+    try {
+        let result = await sendATMessage({ message, recipients })
+        let unitCost = extrapolateSMSCost(result.SMSMessageData.Message);
+        totalCost += unitCost
+        let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
+        recipientsInfo.forEach((recipient) => {
+            if (recipient.statusCode === 101) {
+                successfulRecipients.push(recipient.number)
+            } else {
+                failureReason = recipient.status;
+                unsuccessfulRecipients.push(recipient.number)
+            }
+        })
+        const summary = {
+            message,
+            totalCount: recipients.length,
+            successful: successfulRecipients.length,
+            unsuccessful: unsuccessfulRecipients.length,
+            unsuccessfulRecipients: unsuccessfulRecipients,
+            successfulRecipients,
+            category: "Message",
+        };
+        if (unsuccessfulRecipients.length == 0) {
+            const newMessage = await Message.create(summary)
+            newMessage.save();
+        } else {
+            const newMessage = await Message.create({ ...summary, failureReason })
+            newMessage.save();
+        }
+        revalidatePath("/messages")
+    } catch (error) {
+        // We are catching any error while sending a message to user(s). This is used to send individual messages.
+        unsuccessfulRecipients.push(...recipients.slice(successfulRecipients.length));
+        const summary = {
+            totalCount: recipients.length,
+            successful: successfulRecipients.length,
+            unsuccessful: unsuccessfulRecipients.length,
+            unsuccessfulRecipients: unsuccessfulRecipients,
+            successfulRecipients,
+            totalCost,
+            category: "General",
+        };
+        const newMessage = await Message.create({ ...summary, failureReason: "Africas Talking Error" })
+        newMessage.save();
+        handleError(error);
+    }
+}
 
 
 export const sendBulkMessage = async ({ message }: Message) => {

@@ -1,6 +1,6 @@
 import { columns } from "./columns";
 import { DataTable } from "@/app/components/custom";
-import { ActionBtns } from "@/app/sections";
+import { ActionBtns } from "@/app/(general)/sections";
 import { findAllUsers } from "@/lib/userActions";
 import { Badge } from "@/components/ui/badge";
 

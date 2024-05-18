@@ -15,6 +15,7 @@ const Navbar: React.FC = () => {
       <NavBtn to="/payments" text="payments" />
       <NavBtn to="/messages" text="messages" />
       <NavBtn to="/reminders" text="reminders" />
+      <NavBtn to="/api/auth/signout" text="sign Out" />
     </article>
   );
 };

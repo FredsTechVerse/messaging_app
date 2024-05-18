@@ -93,10 +93,10 @@ export default function DataTable<TData, TValue>({
             <Input
               placeholder="Enter First Name..."
               value={
-                (table.getColumn("fName")?.getFilterValue() as string) ?? ""
+                (table.getColumn("firstName")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn("fName")?.setFilterValue(event.target.value)
+                table.getColumn("firstName")?.setFilterValue(event.target.value)
               }
               className="max-w-sm border-[1px] border-slate-400"
             />

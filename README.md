@@ -2,9 +2,11 @@
 
 ## TO DO
 
+- Check if account is verified.
 - Payment not displaying date correctly during updates
 - Add dropdown
-- Integrate authentication and authorization.
+- Finetune authentication and authorization , allow admins to make changes.
+- We can have the admin dashboard with the various reports but minus the graph.
 
 ## COMMENTS
 

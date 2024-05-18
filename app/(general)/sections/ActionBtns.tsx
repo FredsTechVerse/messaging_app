@@ -2,8 +2,8 @@
 import React, { FC } from "react";
 import { ActionBtn } from "@/app/components/custom";
 import UserFormState from "@/app/context/UserFormState";
-import MessageConfirmationFormState from "../context/MessageConfirmationFormState";
-import PaymentFormState from "../context/PaymentFormState";
+import MessageConfirmationFormState from "../../context/MessageConfirmationFormState";
+import PaymentFormState from "../../context/PaymentFormState";
 const ActionBtns: FC = () => {
   const toggleUserForm = UserFormState((state) => state.toggleUserForm);
   const toggleMessageConfirmationForm = MessageConfirmationFormState(
