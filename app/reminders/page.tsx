@@ -25,6 +25,7 @@ export default async function Page() {
             reminderData.payload.map((reminder: MessageInfo, index: number) => {
               return (
                 <ReminderCard
+                  key={`reminder-${index}`}
                   date={reminder.createdAt}
                   successful={reminder.successful}
                   total={reminder.totalCount}
