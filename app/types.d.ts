@@ -1,8 +1,33 @@
 interface UserInfo {
-    firstName: string,
-    surname: string,
-    contact: string,
-    amount: number,
+    _id: string;
+    firstName: string;
+    surname: string;
+    contact: string;
+    amount: number;
+    paymentInfo: PaymentInfo[];
+}
+type PaymentInfo = {
+    _id: string;
+    firstName: string;
+    surname: string;
+    contact: string;
+    amount: number;
+    status: string;
+    date: Date;
+    referenceID: string
+};
+
+interface MessageInfo {
+    _id: string;
+    message: string;
+    totalCount: number;
+    successful: number;
+    unsuccessful: number;
+    unsuccessfulRecipients: string[];
+    successfulRecipients: string[];
+    category: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 type AlertBoxProps = {

@@ -36,12 +36,14 @@ import { Input } from "@/app/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: any;
+  searchType?: "payment" | "user";
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
+  searchType,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -67,62 +69,102 @@ export default function DataTable<TData, TValue>({
   return (
     <>
       {/* Filters */}
+      <div className="flex flex-col tablet:flex-row items-center justify-between gap-2 px-2 ">
+        <div className="self-end tablet:self-start pt-4 ">
+          {/* Render input based on search type */}
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Search by first name..."
-            value={
-              (table.getColumn("firstName")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("firstName")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm border-[1px] border-slate-400"
-          />
+          {searchType === "payment" && (
+            <Input
+              placeholder="Enter ReferenceID..."
+              value={
+                (table.getColumn("referenceID")?.getFilterValue() as string) ??
+                ""
+              }
+              onChange={(event) =>
+                table
+                  .getColumn("referenceID")
+                  ?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm border-[1px] border-slate-400"
+            />
+          )}
+
+          {searchType === "user" && (
+            <Input
+              placeholder="Enter First Name..."
+              value={
+                (table.getColumn("fName")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("fName")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm border-[1px] border-slate-400"
+            />
+          )}
         </div>
+        <section className="flex-row-centered justify-between tablet:justify-end gap-4 py-2 w-full">
+          <div className="flex-row-centered gap-2">
+            <p>View</p>
 
-        {/* Column visibility */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="ml-auto border-[1px] border-slate-400"
+            <select
+              className="input-styling h-9 rounded-lg "
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
             >
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="bg-white border-[1px] border-slate-400"
-          >
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Column visibility */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className=" border-[1px] border-slate-400"
+              >
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white border-[1px] border-slate-400"
+            >
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </section>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border">
+      <div className="rounded-md border px-2">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                className="bg-slate-600 text-white"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -140,10 +182,11 @@ export default function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={`${rowIndex % 2 === 0 && "bg-slate-300 "} `}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

@@ -1,4 +1,4 @@
-import { User, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "@/app/components/custom";
 import { ActionBtns } from "@/app/sections";
 import { findAllUsers } from "@/lib/userActions";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 export default async function Page() {
   const data = await findAllUsers();
   const userData = await JSON.parse(data);
+  console.log({ userData });
   return (
     <section className="py-5 pb-10">
       <div className="w-full">
@@ -17,11 +18,15 @@ export default async function Page() {
         <h2 className="flex items-center self-end w-max ml-auto gap-2 ">
           Total users
           <Badge className="bg-primary text-white">
-            {userData.payload.length}
+            {userData?.payload.length}
           </Badge>
         </h2>
 
-        <DataTable columns={columns} data={userData.payload} />
+        <DataTable
+          columns={columns}
+          data={userData.payload}
+          searchType="user"
+        />
       </div>
     </section>
   );

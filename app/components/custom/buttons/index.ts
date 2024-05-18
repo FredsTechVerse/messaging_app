@@ -1,6 +1,7 @@
 import ActionBtn from "./ActionBtn";
 import ActionMenu from "./ActionMenu";
 import MessageTableActionBtns from "./MessageTableActionBtns";
-import MenuBtn from "./MenuBtn"
+import MenuBtn from "./MenuBtn";
 import NavBtn from "./NavBtn";
-export { ActionBtn, ActionMenu, MessageTableActionBtns, MenuBtn, NavBtn }
+import PaymentMenu from "./PaymentMenu";
+export { ActionBtn, ActionMenu, MessageTableActionBtns, MenuBtn, NavBtn, PaymentMenu }

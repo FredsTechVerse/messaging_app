@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 import {
   ErrorMessage,
@@ -7,11 +7,11 @@ import {
   Modal,
   ActionBtn,
 } from "@/app/components/custom";
-import UserFormState from "@/app/context/UserFormState";
+import PaymentFormState from "@/app/context/PaymentFormState";
 
-interface UserFormProps {
+interface PaymentFormProps {
   handleSubmit: any;
-  saveUser: any;
+  savePayment: any;
   isEditEnabled: boolean;
   enableEdit: () => void;
   disableEdit: () => void;
@@ -20,25 +20,28 @@ interface UserFormProps {
   errors: any;
 }
 
-const UserFormSyntax: FC<UserFormProps> = ({
+const PaymentFormSyntax: FC<PaymentFormProps> = ({
   handleSubmit,
-  saveUser,
+  savePayment,
   isEditEnabled,
   enableEdit,
   disableEdit,
   register,
   errors,
+  watch,
 }) => {
-  const toggleUserForm = UserFormState((state) => state.toggleUserForm);
-  const userID = UserFormState((state) => state.userID);
-  const isUserFormSubmitted = UserFormState(
-    (state) => state.isUserFormSubmitted
+  const togglePaymentForm = PaymentFormState(
+    (state) => state.togglePaymentForm
+  );
+  const paymentID = PaymentFormState((state) => state.paymentID);
+  const isPaymentFormSubmitted = PaymentFormState(
+    (state) => state.isPaymentFormSubmitted
   );
   return (
     <Modal>
       <div className="form-wrap ">
-        <FormNavigation text="Registration" disableForm={toggleUserForm} />
-        <form className="form-styling" onSubmit={handleSubmit(saveUser)}>
+        <FormNavigation text="Payment" disableForm={togglePaymentForm} />
+        <form className="form-styling" onSubmit={handleSubmit(savePayment)}>
           <div className="input-wrap">
             <label htmlFor="names">Names</label>
             <div className="input-wrap">
@@ -47,10 +50,12 @@ const UserFormSyntax: FC<UserFormProps> = ({
                 maxLength={12}
                 className="input-styling"
                 placeholder="First Name"
-                {...register("fName")}
+                {...register("firstName")}
               />
 
-              {errors.fName && <ErrorMessage message={errors.fName?.message} />}
+              {errors.firstName && (
+                <ErrorMessage message={errors.firstName?.message} />
+              )}
 
               <input
                 readOnly={!isEditEnabled}
@@ -88,6 +93,37 @@ const UserFormSyntax: FC<UserFormProps> = ({
               )}
             </div>
             <div className="input-wrap">
+              <label>Mode of Payment</label>
+              <select
+                className="input-styling mb-5"
+                {...register("modeOfPayment")}
+              >
+                <option key="M-Pesa" value="M-Pesa" className="uppercase">
+                  M-Pesa
+                </option>
+                <option key="cash" value="cash" className="uppercase">
+                  Cash
+                </option>
+              </select>
+              {errors.modeOfPayment && (
+                <ErrorMessage message={errors.modeOfPayment?.message} />
+              )}
+            </div>
+            {watch("modeOfPayment") === "M-Pesa" && (
+              <div className="input-wrap">
+                <label htmlFor="referenceID">ReferenceID</label>
+                <input
+                  readOnly={!isEditEnabled}
+                  className="input-styling"
+                  {...register("referenceID")}
+                />
+                {errors.referenceID && (
+                  <ErrorMessage message={errors.referenceID?.message} />
+                )}
+              </div>
+            )}
+
+            <div className="input-wrap">
               <label htmlFor="amount">Amount</label>
               <input
                 readOnly={!isEditEnabled}
@@ -101,14 +137,25 @@ const UserFormSyntax: FC<UserFormProps> = ({
               )}
             </div>
           </div>
+          <div className="input-wrap">
+            <label>Date of Payment</label>
+            <input
+              readOnly={!isEditEnabled}
+              className="input-styling"
+              placeholder="Enter date of entry"
+              type="date"
+              {...register("date", { valueAsDate: true })}
+            />
+            {errors.date && <ErrorMessage message={errors.date.message} />}
+          </div>
 
-          {userID && isEditEnabled && (
+          {paymentID && isEditEnabled && (
             <section className="self-end flex-row-centered gap-2 py-2">
               <button
                 type="submit"
                 className="bg-slate-700 hover:bg-slate-900 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm "
               >
-                {!isUserFormSubmitted ? "Save" : "Saving"}
+                {!isPaymentFormSubmitted ? "Save" : "Saving"}
               </button>
               <ActionBtn
                 variant="cancel"
@@ -119,15 +166,15 @@ const UserFormSyntax: FC<UserFormProps> = ({
               />
             </section>
           )}
-          {!userID && (
+          {!paymentID && (
             <button
               type="submit"
               className="bg-primary hover:bg-primary/80 px-3 laptop:px-4 py-1.5  rounded-md text-white text-sm my-2 "
             >
-              {!isUserFormSubmitted ? "Submit" : "Submitting"}
+              {!isPaymentFormSubmitted ? "Submit" : "Submitting"}
             </button>
           )}
-          {userID && !isEditEnabled && (
+          {paymentID && !isEditEnabled && (
             <section className="py-2 self-end">
               <ActionBtn
                 variant="edit"
@@ -144,4 +191,4 @@ const UserFormSyntax: FC<UserFormProps> = ({
   );
 };
 
-export default UserFormSyntax;
+export default PaymentFormSyntax;

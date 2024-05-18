@@ -88,10 +88,9 @@ const UserForm: FC = () => {
         setIsUserFormSubmitted(false);
         const userData = JSON.parse(data);
         const { status, message } = userData;
+        console.log({ status, message });
         if (status === 200 || status === 201) {
-          const { _id: userID } = userData.payload;
           handleUISuccess({ message, updateAlertBoxData });
-          setUserID(userID);
           toggleUserForm();
         } else {
           handleUIErrors({ status, message, updateAlertBoxData });

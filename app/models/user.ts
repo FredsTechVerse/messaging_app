@@ -6,6 +6,7 @@ const UserSchema = new Schema(
         surname: { type: String, required: true, uppercase: true },
         contact: { type: String, required: true, unique: true },
         amount: { type: Number, required: true, },
+        paymentInfo: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment" }]
     },
     {
         timestamps: true,

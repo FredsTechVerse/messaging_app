@@ -1,6 +1,6 @@
 "use server";
-// import User from "@/app/models/testUser";
-import User from "@/app/models/user";
+import User from "@/app/models/testUser";
+// import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
 import connectMongoDB from "@/lib/mongodb";
@@ -46,7 +46,6 @@ export const registerUser = async ({
         const response = {
             status: 201,
             message: "User registered",
-            payload: newUser,
         };
         return JSON.stringify(response);
     } catch (err) {
@@ -58,7 +57,7 @@ export const findUserById = async (data: UserDataFetch) => {
     try {
         const { userID } = data
         await connectMongoDB();
-        const userData = await User.findById(userID)
+        const userData = await User.findById(userID).populate({ path: "paymentInfo" })
         const response = {
             status: 200,
             message: "User with specified ID found",
@@ -73,7 +72,9 @@ export const findUserById = async (data: UserDataFetch) => {
 export const findAllUsers = async () => {
     try {
         await connectMongoDB();
-        const userData = await User.find()
+        console.log("Fetching users")
+        const userData = await User.find().populate({ path: "paymentInfo" })
+        console.log({ userData })
         const response = {
             status: 200,
             message: "Users Found",
@@ -103,7 +104,6 @@ export const updateUserInformation = async (data: UserUpdateData) => {
         const response = {
             status: 200,
             message: "User Information Updated",
-            payload: savedUserData,
         };
         return JSON.stringify(response);
     } catch (error: any) {

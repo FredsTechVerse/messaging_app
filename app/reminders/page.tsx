@@ -1,10 +1,12 @@
 import { columns } from "./columns";
 import { MessageTable } from "@/app/components/custom";
 import { findAllReminders } from "@/lib/messageActions";
+import ReminderCard from "./ReminderCard";
 import { Badge } from "@/components/ui/badge";
 export default async function Page() {
   const data: string = await findAllReminders();
   const reminderData = await JSON.parse(data);
+
   return (
     <section className="py-5 pb-10">
       <div className="w-full ">
@@ -18,7 +20,18 @@ export default async function Page() {
           </Badge>
         </h2>
 
-        <MessageTable columns={columns} data={reminderData.payload} />
+        <section className="grid grid-cols-1 tablet:grid-cols-3 gap-4  w-full p-2">
+          {reminderData.payload.length > 0 &&
+            reminderData.payload.map((reminder: MessageInfo, index: number) => {
+              return (
+                <ReminderCard
+                  date={reminder.createdAt}
+                  successful={reminder.successful}
+                  total={reminder.totalCount}
+                />
+              );
+            })}
+        </section>
       </div>
     </section>
   );

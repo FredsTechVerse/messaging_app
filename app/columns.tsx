@@ -1,18 +1,11 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { ActionMenu } from "./components/custom";
+import { calculateTotalAmount } from "@/lib/calculations";
 
-export type User = {
-  _id: string;
-  firstName: string;
-  surname: string;
-  contact: string;
-  amount: string;
-};
-
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<UserInfo>[] = [
   {
     accessorKey: "firstName",
     header: ({ column }) => {
@@ -45,6 +38,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "contact",
     header: "Contact",
   },
+
   {
     accessorKey: "amount",
     header: ({ column }) => {
@@ -53,14 +47,48 @@ export const columns: ColumnDef<User>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount
+          Pledge
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
+    id: "balance",
+    header: "Balance",
+    cell: ({ row }) => {
+      const user = row.original;
+      const pledgeAmount = user.amount;
+      const totalAmountPaid =
+        user?.paymentInfo.length > 0
+          ? calculateTotalAmount(user?.paymentInfo)
+          : 0;
+      const balance = pledgeAmount - totalAmountPaid;
+
+      if (balance == 0) {
+        return (
+          <span className="text-bold px-2 py-0.5 rounded-full text-green-900 bg-green-300">
+            Cleared
+          </span>
+        );
+      } else if (balance < 0) {
+        return (
+          <span className="text-bold px-2 py-0.5 rounded-full text-green-900 bg-green-300">
+            {balance}
+          </span>
+        );
+      } else {
+        return (
+          <span className="text-bold px-2 py-0.5 rounded-full text-red-900 bg-red-300">
+            {balance}
+          </span>
+        );
+      }
+    },
+  },
+  {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const user = row.original;
       return <ActionMenu userID={user._id} />;
