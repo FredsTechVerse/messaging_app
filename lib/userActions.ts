@@ -1,6 +1,6 @@
 "use server";
-import User from "@/app/models/testUser";
-// import User from "@/app/models/user";
+// import User from "@/app/models/testUser";
+import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
 import connectMongoDB from "@/lib/mongodb";
@@ -72,9 +72,7 @@ export const findUserById = async (data: UserDataFetch) => {
 export const findAllUsers = async () => {
     try {
         await connectMongoDB();
-        console.log("Fetching users")
         const userData = await User.find().populate({ path: "paymentInfo" })
-        console.log({ userData })
         const response = {
             status: 200,
             message: "Users Found",

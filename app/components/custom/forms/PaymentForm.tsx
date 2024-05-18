@@ -96,7 +96,6 @@ const PaymentForm: FC = () => {
       watch("modeOfPayment") === "M-Pesa"
         ? data.referenceID
         : `C-${await generateRandomString(6)}`;
-    console.log({ ...data, referenceID });
     try {
       if (!paymentID) {
         setIsPaymentFormSubmitted(true);
@@ -112,7 +111,6 @@ const PaymentForm: FC = () => {
         setIsPaymentFormSubmitted(false);
         const paymentData = JSON.parse(data);
         const { status, message } = paymentData;
-        console.log({ status, message });
         if (status === 200 || status === 201) {
           handleUISuccess({ message, updateAlertBoxData });
           togglePaymentForm();

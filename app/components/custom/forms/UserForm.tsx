@@ -88,7 +88,6 @@ const UserForm: FC = () => {
         setIsUserFormSubmitted(false);
         const userData = JSON.parse(data);
         const { status, message } = userData;
-        console.log({ status, message });
         if (status === 200 || status === 201) {
           handleUISuccess({ message, updateAlertBoxData });
           toggleUserForm();

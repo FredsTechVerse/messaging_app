@@ -3,7 +3,7 @@
 ## TO DO
 
 - Payment not displaying date correctly during updates
-- Revamp reminders page to use cards instead of tables.
+- Add dropdown
 - Integrate authentication and authorization.
 
 ## COMMENTS

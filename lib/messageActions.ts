@@ -2,8 +2,8 @@
 import Message from "../app/models/message";
 const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
-// import User from "@/app/models/testUser";
-import User from "@/app/models/user";
+import User from "@/app/models/testUser";
+// import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
 const africastalking = AfricasTalking({
@@ -38,7 +38,6 @@ const sendATMessage = async ({ message, recipients }: { message: string, recipie
         to: recipients,
         message,
     });
-    console.log({ message, recipient: recipients, status: result?.SMSMessageData?.Recipients[0]?.statusCode })
     return result
 
 }

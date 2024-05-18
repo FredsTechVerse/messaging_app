@@ -3,8 +3,8 @@ import Payment from "@/app/models/payment";
 import { revalidatePath } from "next/cache";
 import { handleError } from "@/lib/errorHandling";
 import connectMongoDB from "@/lib/mongodb";
-// import User from "@/app/models/user";
-import User from "@/app/models/testUser";
+import User from "@/app/models/user";
+// import User from "@/app/models/testUser";
 interface PaymentUpdateData {
     paymentID: string;
     firstName: string;
@@ -51,14 +51,12 @@ export const registerPayment = async ({
             referenceID,
             modeOfPayment
         };
-        console.log(credentials);
         await connectMongoDB();
         let response;
 
         const newPayment = await Payment.create(credentials);
         // We need to disburse payment to the user who matches our specifications.
         const { _id: paymentID } = newPayment;
-        console.log(`Payment saved ${paymentID}`);
 
         const paymentDisbursementResult = await User.findOneAndUpdate(
             { contact: contact },
