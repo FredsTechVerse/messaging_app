@@ -5,8 +5,8 @@ import { AlertBox } from "@/app/components/custom";
 import "@/app/globals.css";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "DIGIOWN",
-  description: "A rental management solution",
+  title: "INUA COMRADE",
+  description: "An accounting solution for the inua comrade initiative",
 };
 
 export default function RootLayout({
