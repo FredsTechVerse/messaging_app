@@ -6,6 +6,15 @@ interface UserInfo {
     amount: number;
     paymentInfo: PaymentInfo[];
 }
+
+interface AdminInfo {
+    _id: string;
+    fName: string;
+    surname: string;
+    idNo: string;
+    contact: string;
+    status: string
+}
 type PaymentInfo = {
     _id: string;
     firstName: string;

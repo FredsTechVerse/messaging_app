@@ -53,7 +53,6 @@ const sendMessage = async ({ users, message }: { users: UserInfo[], message: str
         let user = users[i]
         let refinedContact = [`+${user.contact}`]
         let result = await sendATMessage({ recipients: refinedContact, message })
-        console.log({ user, refinedContact })
         let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
         let isMessageSent = recipientsInfo[0].status === "Success"
 
@@ -84,7 +83,6 @@ const sendMessage = async ({ users, message }: { users: UserInfo[], message: str
         const newMessage = await Message.create({ ...summary, failureReason })
         newMessage.save();
     }
-    console.log({ summary })
     revalidatePath("/messages")
 }
 

@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect } from "react";
-import SignUpFormSyntax from "./SignUpFormSyntax";
+import { SignUpFormSyntax } from "@/app/components/custom";
 import { AdminSchema } from "@/app/zod_schemas";
 import { useRouter } from "next/navigation";
 import {
@@ -12,7 +12,7 @@ import { registerAdmin, findAdminById } from "@/app/auth/libs/adminActions";
 import AlertBoxState from "@/app/context/AlertBoxState";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import SignUpFormState from "@/app/auth/context/SignUpFormState";
+import SignUpFormState from "@/app/context/SignUpFormState";
 import { handleUIErrors, handleUISuccess } from "@/lib/responseHandler";
 
 interface SignUpFormProps {
@@ -25,10 +25,7 @@ interface SignUpFormProps {
 const SignUpForm: FC = () => {
   const router = useRouter();
   const updateAlertBoxData = AlertBoxState((state) => state.updateAlertBoxData);
-  const roleInfo = SignUpFormState((state) => state.userRole);
-  // const role = roleInfo ? roleInfo : "EM-202";
   const role = "EM-203";
-
   const setUserID = SignUpFormState((state) => state.setUserID);
   const setUserRole = SignUpFormState((state) => state.setUserRole);
   const setIsSignUpFormSubmitted = SignUpFormState(

@@ -85,7 +85,27 @@ export const registerPayment = async ({
     }
 };
 
+export const findPaymentDistribution = async () => {
+    try {
+        const totalPaymentsCount = await Payment.countDocuments();
+        const dispersedPaymentsCount = await Payment.countDocuments({ status: 'disbursed' });
+        const undisbursedPaymentsCount = await Payment.countDocuments({ status: 'undisbursed' });
 
+        const response = {
+            status: 200,
+            message: "Payment Distribution Found",
+            payload: {
+                dispersedPayments: dispersedPaymentsCount,
+                undisbursedPayments: undisbursedPaymentsCount,
+                totalPayments: totalPaymentsCount,
+            }
+        };
+
+        return JSON.stringify(response);
+    } catch (err) {
+        return handleError(err);
+    }
+};
 export const findPaymentById = async (data: PaymentDataFetch) => {
     try {
         const { paymentID } = data

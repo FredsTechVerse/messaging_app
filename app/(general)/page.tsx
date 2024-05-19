@@ -1,32 +1,19 @@
-import { columns } from "./columns";
-import { DataTable } from "@/app/components/custom";
-import { ActionBtns } from "@/app/(general)/sections";
-import { findAllUsers } from "@/lib/userActions";
-import { Badge } from "@/components/ui/badge";
-
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+import CareTakerPage from "@/app/users/CaretakerPage";
+import AdminPage from "@/app/users/AdminPage";
+import { redirect } from "next/navigation";
 export default async function Page() {
-  const data = await findAllUsers();
-  const userData = await JSON.parse(data);
-  return (
-    <section className="py-5 pb-10">
-      <div className="w-full">
-        <div className="flex flex-col tablet:flex-row items-center w-full justify-between pb-5 ">
-          <h1 className="text-3xl font-bold">INUA COMRADE</h1>
-          <ActionBtns />
-        </div>
-        <h2 className="flex items-center self-end w-max ml-auto gap-2 ">
-          Total users
-          <Badge className="bg-primary text-white">
-            {userData?.payload.length}
-          </Badge>
-        </h2>
-
-        <DataTable
-          columns={columns}
-          data={userData.payload}
-          searchType="user"
-        />
-      </div>
-    </section>
-  );
+  const session = await getServerSession(options);
+  if (session?.user.isContactVerified !== true) {
+    redirect(
+      `/auth/accountConfirmation?userID=${session?.user.id}&role=${session?.user.role}`
+    );
+  } else if (session?.user.role === "EM-202") {
+    return <CareTakerPage />;
+  } else if (session?.user.role === "EM-203") {
+    return <AdminPage />;
+  } else {
+    redirect(`/user/${session?.user.id}`);
+  }
 }

@@ -2,9 +2,9 @@
 
 ## TO DO
 
+- Not able to get past the signIn page find out why
 - Check if account is verified.
 - Payment not displaying date correctly during updates
-- We can have the admin dashboard with the various reports but minus the graph.
 
 ## COMMENTS
 
