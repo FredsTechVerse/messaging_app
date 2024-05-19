@@ -5,6 +5,7 @@
 - Not able to get past the signIn page find out why
 - Check if account is verified.
 - Payment not displaying date correctly during updates
+- Allow a christian to login with his name and contact to view his/her account.
 
 ## COMMENTS
 

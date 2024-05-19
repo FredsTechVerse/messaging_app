@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { MultiLineChart } from "../../components/custom/Charts";
+import { MultiLineChart } from "@/app/components/custom/Charts";
 interface Props {
   chartData: any;
   chartName: string;
