@@ -4,5 +4,5 @@ import MessageConfirmationForm from "./MessageConfirmationForm";
 import UserForm from "./UserForm";
 import PaymentForm from "./PaymentForm";
 import DeleteConfirmationForm from "./DeleteConfirmationForm";
-
-export { FormNavigation, MessageForm, UserForm, MessageConfirmationForm, PaymentForm, DeleteConfirmationForm }
+import SignUpForm from "./SignupForm"
+export { FormNavigation, MessageForm, UserForm, MessageConfirmationForm, PaymentForm, DeleteConfirmationForm, SignUpForm }

@@ -27,7 +27,7 @@ const MessageFormSyntax: React.FC<MessageFormProps> = ({
   );
   const messageID = messageFormState((state) => state.messageID);
   // const messageInfo = watch("message");
-  const { names, message, email } = errors;
+  const { message } = errors;
   return (
     <Modal>
       <div className="form-wrap  my-5 pb-2 ">

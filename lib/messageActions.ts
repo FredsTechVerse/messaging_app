@@ -2,8 +2,8 @@
 import Message from "../app/models/message";
 const AfricasTalking = require('africastalking');
 import { handleError } from "./errorHandling";
-import User from "@/app/models/testUser";
-// import User from "@/app/models/user";
+// import User from "@/app/models/testUser";
+import User from "@/app/models/user";
 import { revalidatePath } from "next/cache";
 import connectMongoDB from "./mongodb";
 import { extrapolateSMSCost } from "./calculations";
@@ -52,7 +52,10 @@ const sendMessage = async ({ users, message }: { users: UserInfo[], message: str
     for (let i = 0; i < users.length; i++) {
         let user = users[i]
         let refinedContact = [`+${user.contact}`]
+        console.log({ user, message })
+
         let result = await sendATMessage({ recipients: refinedContact, message })
+        console.log({ result })
         let recipientsInfo: RecipientInfo[] = result.SMSMessageData.Recipients;
         let isMessageSent = recipientsInfo[0].status === "Success"
 
@@ -125,7 +128,8 @@ const sendReminder = async () => {
         for (let i = 0; i < users.length; i++) {
             let user = users[i]
             let capitalizedName = user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase();
-            let message = `Greetings ${capitalizedName}, Reminder to honor your ${user.amount > 1 ? `Ksh ${user.amount}` : ""} pledge for the INUA COMRADE Initiative to empower fellow Christians by helping the less privilleged financially. Donate via Till No 4313956 (Shadrack Wahinya).Thank you for your generosity : DeKUT CATHOLIC STUDENTS - For more information reach out to : 0110409672`
+            let message = `Greetings ${capitalizedName}.Our charity drive was a success!Thank you for your contribution. You can still fulfill your pledge via Till Number 4313956 (Shadrack Wahinya Waweru - Treasurer). Join our celebratory walk on Saturday, 8th June, 9 am. Kindly confirm attendance via Google Form : https://forms.gle/oX9Fk4t9HYasjJ6G8 . For inquiries, contact 0110409672.#INUACOMRADE2024 #CHARITYBEGINSATHOME`
+            // let message = `Greetings ${capitalizedName}, Reminder to honor your ${user.amount > 1 ? `Ksh ${user.amount}` : ""} pledge for the INUA COMRADE Initiative to empower fellow Christians by helping the less privilleged financially. Donate via Till No 4313956 (Shadrack Wahinya).Thank you for your generosity : DeKUT CATHOLIC STUDENTS - For more information reach out to : 0110409672`
             let refinedContact = [`+${user.contact}`]
             let result = await sendATMessage({ recipients: refinedContact, message })
             unitCost = extrapolateAmount(result.SMSMessageData.Message);
@@ -229,11 +233,11 @@ export const sendBulkMessage = async ({ message }: Message) => {
     try {
         await connectMongoDB();
         const users = await User.find()
-        sendMessage({ users, message })
+        await sendMessage({ users, message })
         const response = {
             status: 201,
             message: "Message sent",
-        };
+        }; ``
         return JSON.stringify(response);
     } catch (err) {
         return handleError(err)
@@ -243,7 +247,7 @@ export const sendBulkMessage = async ({ message }: Message) => {
 
 export const sendBulkReminder = async () => {
     try {
-        sendReminder();
+        await sendReminder();
         const response = {
             status: 201,
             message: "Message sent",

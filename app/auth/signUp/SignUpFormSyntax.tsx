@@ -32,9 +32,7 @@ const SignUpFormSyntax: FC<SignUpFormProps> = ({
   return (
     <div className="form-wrap ">
       <FormNavigation
-        text={
-          role === "EM-203" ? "Admin Registration" : "Caretaker Registration"
-        }
+        text={role === "EM-203" ? "Admin Registration" : "User Registration"}
         isCloseBtnDisabled={true}
       />
       <form className="form-styling " onSubmit={handleSubmit(saveBusiness)}>
