@@ -10,7 +10,6 @@ export default withAuth(
         ) {
             return NextResponse.rewrite(new URL("/denied", request.url));
         }
-        // Payments
         if (
             request.nextUrl.pathname.startsWith("/payments") &&
             request.nextauth.token?.role !== "EM-203"

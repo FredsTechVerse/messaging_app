@@ -40,9 +40,10 @@ const SignInForm: FC = () => {
         password: password.trim(),
         callbackUrl,
       });
-
+      console.log(res);
       setIsSignInFormSubmitted(false);
       if (!res?.error) {
+        console.log("Redirection to homepage");
         setIsSignInFormSubmitted(false);
         router.push(callbackUrl);
       } else {

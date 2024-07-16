@@ -8,7 +8,6 @@ import DoughnutCard from "./DoughnutCard";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { findAllAdmins } from "@/app/auth/libs/adminActions";
-import { findAllCaretakers } from "@/app/auth/libs/caretakerActions";
 import { findAllUsers } from "@/lib/userActions";
 import { calculateTotalAmount } from "@/lib/calculations";
 
@@ -17,7 +16,6 @@ export default async function Page() {
   const session = await getServerSession(options);
   const users = await findAllUsers();
   const admins = await findAllAdmins();
-  const caretakers = await findAllCaretakers();
   const payments = await findAllPayments();
   const paymentDistribution = await findPaymentDistribution();
   const usersData = await JSON.parse(users);

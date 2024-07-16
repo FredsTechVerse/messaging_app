@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MessageSchema } from "@/app/zod_schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { findMessage, sendBulkMessage } from "@/lib/messageActions";
+import { findMessage } from "@/lib/messageActions";
 import ConfirmationFormState from "@/app/context/MessageConfirmationFormState";
 import MessageFormState from "@/app/context/MessageFormState";
 interface MessageFormProps {
@@ -51,7 +51,7 @@ const MessageForm: FC = (props) => {
     } else {
       setIsEditEnabled(true);
     }
-  }, [messageID]);
+  }, [messageID, fetchMessage]);
 
   const submitMessage = async (data: any) => {
     const { message } = data;
